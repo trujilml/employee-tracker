@@ -1,18 +1,32 @@
-INSERT INTO department (id, name)
+INSERT INTO department (name)
 VALUES
-    (2446, 'Sales'),
-    (5684, 'Front Office'),
-    (9402, 'Legal'),
-    (3944, 'Software Engineering'),
-    (5482, 'Web Design'),
-    (6523, 'Social Media Marketing'),
-    (8745, 'Human Resources'),
-    (7633, 'Finance');
+    ('Sales'),
+    ('Front Office'),
+    ('Legal'),
+    ('Software Engineering'),
+    ('Web Design'),
+    ('Social Media Marketing'),
+    ('Human Resources'),
+    ('Finance');
 
-INSERT INTO role (department_id, title, salary)
+INSERT INTO roles (department_id, title, salary)
 VALUES 
-    (6523, 'Social Media Manager', 34000),
-    (3944, 'Full Stack Developer', 75600),
-    (5684, 'Secretary', 22000),
-    (8745, 'HR Director', 55990);
-    
+    (1, 'Sales Rep. Manager', 84000),
+    (2, 'Secretary', 22000),
+    (3, 'Paralegal', 62000),
+    (4, 'Full Stack Developer', 75960),
+    (5, 'Front-End Developer', 58990),
+    (6, 'Social Media Manager', 65990),
+    (7, 'HR Director', 55990),
+    (8, 'Accountant', 55690);
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES
+    ('James', 'Quiroz', 1, 1),
+    ('Victoria', 'Sansberg', 2, null),
+    ('Patricia', 'Singh', 3, null),
+    ('Richard', 'Millburn', 4, null),
+    ('Shawn', 'Grant', 5, null),
+    ('Isaiah', 'Trujillo', 6, 1),
+    ('Taleah', 'Duchovny', 7, 1),
+    ('David', 'Wu', 8, null);
