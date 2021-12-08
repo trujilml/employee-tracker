@@ -3,9 +3,6 @@ import mysql2 from 'mysql2';
 import inquirer from 'inquirer';
 import cTable from 'console.table';
 
-// //to start connection to the server
-// export default connection;
-
 //chalk to brighten the terminal text up! 
 import chalk from 'chalk';
 
@@ -14,10 +11,6 @@ import dotenv from 'dotenv';
 dotenv.config()
 
 //node -r dotenv/config server.js  - to do sans import message above to ensure dotenv installation
-
-// import('dotenv').config;
-
-// require('dotenv').config();
 
 const connection = mysql2.createConnection({
     host: 'localhost',
@@ -35,54 +28,103 @@ connection.connect((err) => {
     console.log(chalk.greenBright.bold(`Connected to the employee database. ID: ${connection.threadId}`));
 });
 
-
-const startPage = ['View all Employees', 'View all Employees by Department', 'Exit'];
-
-// const allEmployees = `SELECT e.id, e.first_name AS "First Name", e.last_name AS "Last Name, r.title, d.department_name AS "Department"`;
-//will require reference from the schema file and starter functions to search employees below
-
 const startDatabase = () => {
-    inquirer.prompt({
-        name: 'selectMenu',
-        type: 'list',
-        message: chalk.whiteBright.bold.bgMagentaBright('Select a database option below: '),
-        choices: startPage
-    }).then((answer) => {
-        switch (answer.selectMenu) {
-            case 'View all Employees':
-                showAllEmployees();
-                break;
-            case 'View all Employees by Department':
-                showByDepartment();
-                break;
-            case 'Exit':
-                connection.end();
-                break;
+        inquirer.prompt ([
+        {
+            type: 'list',
+            name: 'menuChoices',
+            message: chalk.whiteBright.bold.bgCyanBright('Select a database option below: '),
+            choices: [ 'View all Employees', 
+                       'View all Employees by Department', 
+                       'View all Departments',
+                       'View Department budgets',
+                       'View all Roles',
+                       'Add an Employee',
+                       'Add a Department',
+                       'Add a Role',
+                       'Delete an Employee',
+                       'Delete a Department',
+                       'Delete a Role',
+                       'Update an Employee`s Role',
+                       'Update an Employee`s Manager',
+                       'Exit']
         }
-    })
+        ])
+        .then((answers) => {
+            const { menuChoices } = answers;
+
+            if (menuChoices === 'View all Employees') {
+                viewEmployees();
+            }
+
+            if (menuChoices === 'View all Employees by Department') {
+                viewEmployeesByDepartment();
+            }
+
+            if (menuChoices === 'Exit') {
+                connection.end();
+            };
+        });
+    };
+
+const viewEmployees = () => {
+           console.log(chalk.whiteBright.bold.bgGreenBright('Showing all employees...'));
+           const employeeQuery = `SELECT employee.id, 
+                       employee.first_name,
+                       employee.last_name,
+                       role.title,
+                       department.name AS department,
+                       role.salary,
+                       CONCAT (manager.first_name, " ", manager.last_name) AS manager
+                    FROM employee
+                        LEFT JOIN role ON employee.role_id = role.id
+                        LEFT JOIN department ON role.department_id = department.id
+                        LEFT JOIN employee manager ON employee.manager_id = manager.id`;
+
+        //    connection.promise().query(sql, (err, rows) => {
+        //        if (err) throw err;
+        //        console.table(rows);
+        //        startDatabase();
+
+        connection.promise().query(employeeQuery, (err, rows)); {
+            if(err){
+                console.log(chalk.whiteBright.bold.bgRedBright(err));
+                return;
+            }
+                console.table(chalk.yellowBright('All Employees'), rows);
+        }
+
+        // connection.promise().query(sql, (err, rows))
+        //             .catch(err => console.log(err))
+        //             .then(console.table(chalk.yellowBright('All Employees'), rows));
+
+        //           connection.promise().query(sql, (err, rows))
+//           .then(console.table(chalk.yellowBright('All Employees'), rows)
+//           .catch(err => console.log(err)));
+//           startDatabase();
+
+                   startDatabase();
 }
 
-const showAllEmployees = () => {
-        console.log('Showing all employees...');
-        const sql = `SELECT employee.id, 
-                    employee.first_name,
-                    employee.last_name,
-                    role.title,
-                    department.name AS department,
-                    role.salary`;
-
-        //err and rows aren't showing as defined - figure this out
-          connection.promise().query(sql, (err, rows))
-          .then(console.table(chalk.yellowBright('All Employees'), rows)
-          .catch(err => console.log(err)));
-          startDatabase();
-
-        // connection.promise().query(sql, (err, rows) => {
-        //         if (err) throw err;
-        //         console.table(chalk.yellowBright('All Employees'), rows);
-        //         startDatabase();
+const viewEmployeesByDepartment = () => {
+    console.log(chalk.whiteBright.bold.bgGreenBright('Showing employees by department...'));
+    const sql = `SELECT employee.first_name,
+                        employee.last_name,
+                        department.name AS department
+                 FROM employee
+                 LEFT JOIN role ON employee.role_id = role.id
+                 LEFT JOIN department ON role.department_id = department.id`;
     
-};
+    connection.promise().query(sql, (err, rows)); {
+        if (err){
+            console.log(chalk.whiteBright.bold.bgRedBright(err));
+            return;
+        } 
+        console.table(rows);
+    }
+        startDatabase();
+}
 
 
 startDatabase();
+

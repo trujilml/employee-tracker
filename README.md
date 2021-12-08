@@ -57,3 +57,13 @@ A walkthrough video demonstrating the functionality of the application.
 
 The URL of the GitHub repository, with a unique name and a README describing the project.
 
+
+Developed With
+-JavaScript
+-Node.js
+-Inquirer
+-MySQL2
+-Jest
+-dotenv
+-Chalk
+-console.table
