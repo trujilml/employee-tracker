@@ -72,48 +72,32 @@ const viewEmployees = () => {
            const employeeQuery = `SELECT employee.id, 
                        employee.first_name,
                        employee.last_name,
-                       role.title,
+                       roles.title,
                        department.name AS department,
-                       role.salary,
+                       roles.salary,
                        CONCAT (manager.first_name, " ", manager.last_name) AS manager
                     FROM employee
-                        LEFT JOIN role ON employee.role_id = role.id
-                        LEFT JOIN department ON role.department_id = department.id
+                        LEFT JOIN roles ON employee.role_id = roles.id
+                        LEFT JOIN department ON roles.department_id = department.id
                         LEFT JOIN employee manager ON employee.manager_id = manager.id`;
 
-        //    connection.promise().query(sql, (err, rows) => {
-        //        if (err) throw err;
-        //        console.table(rows);
-        //        startDatabase();
-
-        connection.promise().query(employeeQuery, (err, rows)); {
-            if(err){
-                console.log(chalk.whiteBright.bold.bgRedBright(err));
-                return;
-            }
-                console.table(chalk.yellowBright('All Employees'), rows);
-        }
-
-        // connection.promise().query(sql, (err, rows))
-        //             .catch(err => console.log(err))
-        //             .then(console.table(chalk.yellowBright('All Employees'), rows));
-
-        //           connection.promise().query(sql, (err, rows))
-//           .then(console.table(chalk.yellowBright('All Employees'), rows)
-//           .catch(err => console.log(err)));
-//           startDatabase();
+        connection.promise().query(employeeQuery).then(([ rows ]) => {
+            let employee = rows;
+            console.table(chalk.yellowBright('All Employees'), employee);
+        }).catch(err => console.log(chalk.whiteBright.bold.bgRedBright(err)));
 
                    startDatabase();
 }
 
+//reformat this function like how viewEmployees is seen above
 const viewEmployeesByDepartment = () => {
     console.log(chalk.whiteBright.bold.bgGreenBright('Showing employees by department...'));
     const sql = `SELECT employee.first_name,
                         employee.last_name,
                         department.name AS department
                  FROM employee
-                 LEFT JOIN role ON employee.role_id = role.id
-                 LEFT JOIN department ON role.department_id = department.id`;
+                 LEFT JOIN roles ON employee.role_id = roles.id
+                 LEFT JOIN department ON roles.department_id = department.id`;
     
     connection.promise().query(sql, (err, rows)); {
         if (err){

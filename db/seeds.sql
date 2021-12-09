@@ -27,6 +27,6 @@ VALUES
     ('Patricia', 'Singh', 3, null),
     ('Richard', 'Millburn', 4, null),
     ('Shawn', 'Grant', 5, null),
-    ('Isaiah', 'Trujillo', 6, 1),
-    ('Taleah', 'Duchovny', 7, 1),
+    ('Isaiah', 'Trujillo', 6, null),
+    ('Taleah', 'Duchovny', 7, null),
     ('David', 'Wu', 8, null);
