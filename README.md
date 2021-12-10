@@ -33,20 +33,20 @@ You’ll need to use the MySQL2 package (Links to an external site.) to connect 
 
 Important: You will be committing a file that contains your database credentials. Make sure that your MySQL password is not used for any other personal accounts, because it will be visible on GitHub. dotenv is used.
 
-You might also want to make your queries asynchronous. MySQL2 exposes a .promise() function on Connections to upgrade an existing non-Promise connection to use Promises. To learn more and make your queries asynchronous, refer to the npm documentation on MySQL2 (Links to an external site.).
+You might also want to make your queries asynchronous. MySQL2 exposes a .promise() function on Connections to upgrade an existing non-Promise connection to use Promises. 
 
 Bonus
 Try to add some additional functionality to your application, such as the ability to do the following:
 
 Update employee managers.
 
-View employees by manager.
+View employees by manager. - have not tried
 
-View employees by department.
+View employees by department. - clearly working 
 
 Delete departments, roles, and employees.
 
-View the total utilized budget of a department—in other words, the combined salaries of all employees in that department.
+View the total utilized budget of a department—in other words, the combined salaries of all employees in that department. - not working for my code currently
 
 
 
