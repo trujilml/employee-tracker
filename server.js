@@ -85,6 +85,22 @@ const startDatabase = () => {
                 addRole(); //function is clearly working but all roles from its function is still not displayed
             }
 
+            if(menuChoices === 'Delete an Employee') {
+                deleteEmployee();
+            }
+
+            if(menuChoices === 'Delete a Department') {
+                deleteDepartment();
+            }
+
+            if(menuChoices === 'Delete a Role') {
+                deleteRole();
+            }
+
+            if(menuChoices === 'Update an Employee`s Role'){
+                updateEmployeeRole();
+            }
+
             if (menuChoices === 'Exit') {
                 connection.end();
             };
@@ -351,5 +367,106 @@ const addRole = () => {
         });
     });
 };
+//add chalk to this and other working functions
+const deleteEmployee = () => {
+    //obtain employee from employee table
+    const employeeSql = `SELECT * FROM employee`;
 
+    connection.query(employeeSql, (err, data) => {
+        if (err) throw (err);
+
+        const employees = data.map(({ id, first_name, last_name }) => ({ name: first_name + " "+ last_name, value: id }));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'name',
+                message: 'Which employee would you like to delete?',
+                choices: employees
+            }
+        ])
+        .then(employeeChoice => {
+            const employee = employeeChoice.name;
+
+            const sql = `DELETE FROM employee WHERE id = ?`;
+
+            connection.query(sql, employee, (result) => {
+                console.log("Successfully deleted.");
+
+                viewEmployees();
+            });
+        });
+    });
+};
+
+const deleteDepartment = () => {
+    const departmentSql = `SELECT * FROM department`;
+
+    connection.query(departmentSql, (err, data) => {
+        if (err) throw (err);
+
+        const department = data.map(({name, id}) => ({ name: name, value: id}));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'department',
+                message: "What department do you want to delete?",
+                choices: department
+            }
+        ])
+        .then(departmentChoice => {
+            const department = departmentChoice.department;
+            const sql = `DELETE FROM department WHERE id = ?`;
+
+            connection.query(sql, department, (err, result) => {
+                if (err) throw (err);
+                console.log("Successfully deleted.");
+
+                viewAllDepartments();
+            });
+        });
+    });
+};
+
+const deleteRole = () => {
+    const roleSql = `SELECT * FROM roles`;
+
+    connection.query(roleSql, (err, data) => {
+        if (err) throw (err);
+
+        const roles = data.map(({ title, id }) => ({ name: title, value: id}));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'role',
+                message: "What role do you want to delete?",
+                choices: roles
+            }
+        ])
+        .then(roleChoice => {
+            const roles = roleChoice.roles;
+            const sql = `DELETE FROM roles WHERE id = ?`;
+
+            connection.query(sql, roles, (result) => {
+                console.log("Successfully deleted.");
+
+                viewAllRoles();
+            });
+        });
+    });
+};
+
+const updateEmployeeRole = () => {
+    //obtain employee from the employee table
+    const employeeSql = `SELECT * FROM employee`;
+
+    connection.query(employeeSql, (err, data) => {
+        if (err) throw (err);
+
+        const employees 
+    })
+
+}
 startDatabase();

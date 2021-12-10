@@ -38,15 +38,15 @@ You might also want to make your queries asynchronous. MySQL2 exposes a .promise
 Bonus
 Try to add some additional functionality to your application, such as the ability to do the following:
 
-Update employee managers.
+Update employee managers. - get started!
 
-View employees by manager. - have not tried
+View employees by manager. - have not tried, get started
 
 View employees by department. - clearly working 
 
-Delete departments, roles, and employees.
+Delete departments, roles, and employees. - works perfectly 
 
-View the total utilized budget of a department—in other words, the combined salaries of all employees in that department. - not working for my code currently
+View the total utilized budget of a department—in other words, the combined salaries of all employees in that department. - not working for my code currently - try to fix
 
 
 
@@ -57,6 +57,11 @@ A walkthrough video demonstrating the functionality of the application.
 
 The URL of the GitHub repository, with a unique name and a README describing the project.
 
+Installation
+
+Usage
+
+Comments
 
 Developed With
 -JavaScript
