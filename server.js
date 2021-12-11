@@ -494,8 +494,9 @@ const deleteRole = () => {
         });
     });
 };
-//chalk update
+
 const updateEmployeeRole = () => {
+    console.log(chalk.greenBright.bold('Make the following changes below: '));
     //obtain employee from the employee table
     const employeeSql = `SELECT * FROM employee`;
 
@@ -544,7 +545,7 @@ const updateEmployeeRole = () => {
 
                     connection.query(updateSql, params, (err, result) => {
                         if (err) throw (chalk.redBright.bold(err));
-                        console.log("Employee has been updated.");
+                        console.log(chalk.greenBright.bold("Employee has been updated."));
 
                         viewEmployees();
                     });
@@ -553,8 +554,9 @@ const updateEmployeeRole = () => {
         });
     });
 };
-//bring in chalk
+
 const updateEmployeeManager = () => {
+    console.log(chalk.greenBright.bold('Make the following changes below: '));
     //obtain employee from the employee table
     const employeeSql = `SELECT * FROM employee`;
 
@@ -603,7 +605,7 @@ const updateEmployeeManager = () => {
 
                     connection.query(updateManagerSql, params, (err, result) => {
                         if (err) throw (chalk.redBright.bold(err));
-                        console.log("Employee has been updated.");
+                        console.log(chalk.greenBright.bold("Employee has been updated."));
 
                         viewEmployees();
                     });

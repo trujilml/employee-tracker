@@ -6,8 +6,10 @@ Employee Tracker is a command-line application used to manage a company's employ
 ## Description
 For business owners, Employee Tracker is an application that allows one to view and manage the departments, roles, and employees of their workplace.
 
+When the application is started, the user is presented -
+
 Your Task
-Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called content management systems (CMS). Your assignment this week is to build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.
+
 
 Acceptance Criteria
 GIVEN a command-line application that accepts user input
@@ -28,6 +30,22 @@ THEN I am prompted to enter the employee’s first name, last name, role, and ma
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role
 
+                        ['View all Employees', 
+                       'View all Employees by Department', 
+                       'View all Employees by Manager',
+                       'View all Departments',
+                       'View Department budgets', 
+                       'View all Roles', 
+                       'Add an Employee', 
+                       'Add a Department',
+                       'Add a Role', 
+                       'Delete an Employee',
+                       'Delete a Department',
+                       'Delete a Role', 
+                       'Update an Employee`s Role',
+                       'Update an Employee`s Manager',
+                       'Exit']
+
 Bonus
 Try to add some additional functionality to your application, such as the ability to do the following:
 
@@ -39,7 +57,7 @@ View employees by department. - works!
 
 Delete departments, roles, and employees. - works!
 
-View the total utilized budget of a department—in other words, the combined salaries of all employees in that department. - not working for my code currently - TRY TO FIX
+View the total utilized budget of a department—in other words, the combined salaries of all employees in that department. -works!
 
 
 
