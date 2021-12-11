@@ -1,17 +1,18 @@
-//for required add-ons mysql2, inquirer for testing, console table to show mysql tables on the console
+//for required add-ons mysql2, inquirer for testing, console.table to show mysql tables on the console
 import mysql2 from 'mysql2';
 import inquirer from 'inquirer';
 import cTable from 'console.table';
 
-//chalk to brighten the terminal text up! 
+//chalk package to brighten the terminal text up for completed prompts!
 import chalk from 'chalk';
 
-//for password protection
+//dotenv package for password protection in hidden .env file
 import dotenv from 'dotenv';
 dotenv.config()
 
-//node -r dotenv/config server.js  - to do sans import message above to ensure dotenv installation
+//node -r dotenv/config server.js  - to do sans import message above to ensure dotenv installation and node to start server.js file
 
+//mysql2 connection function to start database server
 const connection = mysql2.createConnection({
     host: 'localhost',
     port: 3306,
@@ -27,7 +28,7 @@ connection.connect((err) => {
     }
     console.log(chalk.greenBright.bold(`Connected to the employee database. ID: ${connection.threadId}`));
 });
-
+//startDatabase function initiates at end of file, responsible for housing all of these choices for the employee tracker with their respective functions in order
 const startDatabase = () => {
         inquirer.prompt ([
         {
@@ -115,7 +116,7 @@ const startDatabase = () => {
             };
         });
     };
-
+//shows all employees in database
 const viewEmployees = () => {
            console.log(chalk.greenBright.bold('Showing all employees...'));
            const employeeQuery = `SELECT employee.id, 
@@ -133,11 +134,11 @@ const viewEmployees = () => {
         connection.promise().query(employeeQuery).then(([ rows ]) => {
             let employee = rows;
             console.table(chalk.yellowBright.bold('All Employees'), employee);
-        }).catch(err => console.log(chalk.redBright.bold(err)));
+            }).catch(err => console.log(chalk.redBright.bold(err)));
 
-                   startDatabase();
-}
-
+            startDatabase();
+};
+//shows employees by their department
 const viewEmployeesByDepartment = () => {
     console.log(chalk.greenBright.bold('Showing employees by department...'));
     const employeeDepartmentQuery = `SELECT employee.first_name,
@@ -155,7 +156,7 @@ const viewEmployeesByDepartment = () => {
                     
         startDatabase();
 };
-
+//shows employees by their manager
 const viewEmployeesByManager = () => {
     console.log(chalk.greenBright.bold('Showing employees by manager...'));
     const managerDepartmentQuery = `SELECT employee.first_name,
@@ -171,7 +172,7 @@ const viewEmployeesByManager = () => {
                     
         startDatabase();
 };
-
+//shows all departments
 const viewAllDepartments = () => {
     console.log(chalk.greenBright.bold('Showing all departments...'));
     const departmentQuery = `SELECT department.id AS id, department.name AS department FROM department`;
@@ -182,8 +183,8 @@ const viewAllDepartments = () => {
          }).catch(err => console.log(chalk.redBright.bold(err)));
 
         startDatabase();
-}
-
+};
+//shows the budget of each department
 const viewDepartmentBudgets = () => {
     console.log(chalk.greenBright.bold('Showing budget by department...'));
     const departmentBudgetQuery = `SELECT department_id AS id,
@@ -199,10 +200,10 @@ const viewDepartmentBudgets = () => {
 
         startDatabase();
 };
-
+//shows all employee roles
 const viewAllRoles = () => {
     console.log(chalk.greenBright.bold('Showing all roles...'));
-    const roleQuery = `SELECT roles.title, roles.salary, department.name AS department
+    const roleQuery = `SELECT roles.id, roles.title, department.name AS department, roles.salary
                         FROM roles
                         INNER JOIN department ON roles.department_id = department.id`;
 
@@ -213,7 +214,7 @@ const viewAllRoles = () => {
 
         startDatabase();
 };
-
+//inquirer prompt and generates new added employee in the employee table database
 const addEmployee = () => {
     console.log(chalk.greenBright.bold('Enter the following below: '));
     inquirer.prompt([
@@ -246,7 +247,7 @@ const addEmployee = () => {
     ])
     .then(answer => {
         const params = [answer.firstName, answer.lastName];
-        console.log(answer);
+        //retrieves first and last name of the new employee followed by the role and manager below in their respective prompts
 
         //obtain roles from the roles table in seeds sql file
         const roleSql = `SELECT roles.id, roles.title FROM roles`;
@@ -302,7 +303,7 @@ const addEmployee = () => {
     });
 });
 };
-
+//inquirer prompt that adds a department
 const addDepartment = () => {
     console.log(chalk.greenBright.bold('Enter the following below: '));
     inquirer.prompt([
@@ -330,9 +331,9 @@ const addDepartment = () => {
 
                 viewAllDepartments();
             });
-        })
-    }
-
+        });
+    };
+//inquirer prompt that adds a role
 const addRole = () => {
     console.log(chalk.greenBright.bold('Enter the following below: '));
     inquirer.prompt([
@@ -372,7 +373,7 @@ const addRole = () => {
             if (err) throw (err);
 
             const department = data.map(({name, id}) => ({ name: name, value: id }));
-            console.log(department);
+
             inquirer.prompt([
                 {
                     type: 'list',
@@ -384,8 +385,6 @@ const addRole = () => {
             .then(departmentChoice => {
                 const dept = departmentChoice.department;
                 params.push(dept);
-
-                console.log(params);
 
                 const dptSql = `INSERT INTO roles (title, salary, department_id)
                                 VALUES (?, ?, ?)`;
@@ -400,7 +399,7 @@ const addRole = () => {
         });
     });
 };
-
+//inquirer prompt that deletes an employee
 const deleteEmployee = () => {
     console.log(chalk.greenBright.bold('Select the following below: '));
     //obtain employee from employee table
@@ -432,7 +431,7 @@ const deleteEmployee = () => {
         });
     });
 };
-
+//inquirer prompt that deletes a department
 const deleteDepartment = () => {
     console.log(chalk.greenBright.bold('Select the following below: '));
     const departmentSql = `SELECT * FROM department`;
@@ -463,7 +462,7 @@ const deleteDepartment = () => {
         });
     });
 };
-
+//inquirer prompt that deletes a role
 const deleteRole = () => {
     console.log(chalk.greenBright.bold('Select the following below: '));
     const roleSql = `SELECT * FROM roles`;
@@ -483,7 +482,6 @@ const deleteRole = () => {
         ])
         .then(roleChoice => {
             const role = roleChoice.role;
-            console.log(role);
             const sql = `DELETE FROM roles WHERE id = ?`;
 
             connection.query(sql, role, (result) => {
@@ -494,7 +492,7 @@ const deleteRole = () => {
         });
     });
 };
-
+//inquirer prompt that updates the role of an employee
 const updateEmployeeRole = () => {
     console.log(chalk.greenBright.bold('Make the following changes below: '));
     //obtain employee from the employee table
@@ -554,7 +552,7 @@ const updateEmployeeRole = () => {
         });
     });
 };
-
+//inquirer prompt that updates the manager of the employee
 const updateEmployeeManager = () => {
     console.log(chalk.greenBright.bold('Make the following changes below: '));
     //obtain employee from the employee table
@@ -614,5 +612,5 @@ const updateEmployeeManager = () => {
         });
     });
 };
-
+//below function allows database to open using `node server.js`
 startDatabase();

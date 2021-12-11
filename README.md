@@ -10,7 +10,7 @@ When the application is started, the user is presented -
 
 Your Task
 
-
+MEETS ALL REQUIREMENTS
 Acceptance Criteria
 GIVEN a command-line application that accepts user input
 WHEN I start the application
