@@ -18,7 +18,6 @@ When the application is started, the user is presented with the following option
 * 'Add a Department' - User is prompted to enter the name of their database which is then added to the database. 
 * 'Add a Role' - User is prompted to enter the name of the role alongside its salary and department which is then added to the database.
 * 'Delete an Employee' - User is able to delete an employee from the database and have its changes reflected in the database.
-* 'Delete a Department' - User is able to delete a department from the database and have its changes reflected in the database.
 * 'Delete a Role' - User is able to delete a role from the database and have its changes reflected in the database.
 * 'Update an Employee`s Role' - User is prompted to select an employee and update their new role which is changed and added to the database. 
 * 'Update an Employee`s Manager' - User is prompted to select an employee and update their manager which is changed and added to the database. 
@@ -43,6 +42,7 @@ The URL of the GitHub repository, with a unique name and a README describing the
 - [Installation](#Installation)
 - [Usage](#Usage)
 - [Developed With](#Developed-with)
+- [Further Ideas](#Further-Ideas)
 
 ## Installation
 - This file can be cloned through GitHub into your own repository by selecting the above Code button.
@@ -62,3 +62,6 @@ The URL of the GitHub repository, with a unique name and a README describing the
 - Chalk - npm package that styles and formats different colors and background for the command line terminal. Colorfully displays results from the inquirer prompts and titles of the inquired employee data tables. - https://www.npmjs.com/package/chalk
 - JavaScript - Back-end Development 
 - Node.js - Back-end Development 
+
+## Further Ideas
+- Implement the option to delete a department again. Initially, this option allowed for users to delete a department. Yet, it resulted in errors when attempting to achieve it in the terminal log. 

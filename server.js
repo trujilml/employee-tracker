@@ -45,7 +45,6 @@ const startDatabase = () => {
                        'Add a Department',
                        'Add a Role', 
                        'Delete an Employee',
-                       'Delete a Department',
                        'Delete a Role', 
                        'Update an Employee`s Role',
                        'Update an Employee`s Manager',
@@ -93,10 +92,6 @@ const startDatabase = () => {
 
             if(menuChoices === 'Delete an Employee') {
                 deleteEmployee();
-            }
-
-            if(menuChoices === 'Delete a Department') {
-                deleteDepartment();
             }
 
             if(menuChoices === 'Delete a Role') {
@@ -427,37 +422,6 @@ const deleteEmployee = () => {
                 console.log(chalk.redBright.bold("Successfully deleted."));
 
                 viewEmployees();
-            });
-        });
-    });
-};
-//inquirer prompt that deletes a department
-const deleteDepartment = () => {
-    console.log(chalk.greenBright.bold('Select the following below: '));
-    const departmentSql = `SELECT * FROM department`;
-
-    connection.query(departmentSql, (err, data) => {
-        if (err) throw (err);
-
-        const department = data.map(({name, id}) => ({ name: name, value: id}));
-
-        inquirer.prompt([
-            {
-                type: 'list',
-                name: 'department',
-                message: "What department do you want to delete?",
-                choices: department
-            }
-        ])
-        .then(departmentChoice => {
-            const department = departmentChoice.department;
-            const sql = `DELETE FROM department WHERE id = ?`;
-
-            connection.query(sql, department, (err, result) => {
-                if (err) throw (chalk.redBright.bold(err));
-                console.log(chalk.redBright.bold("Successfully deleted."));
-
-                viewAllDepartments();
             });
         });
     });
