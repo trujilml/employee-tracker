@@ -1,18 +1,13 @@
 # Employee Tracker
 
 <!-- insert in screenshot of completed console or gif of video -->
-
+Employee Tracker is a command-line application used to manage a company's employee database.
 
 ## Description
+For business owners, Employee Tracker is an application that allows one to view and manage the departments, roles, and employees of their workplace.
+
 Your Task
 Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called content management systems (CMS). Your assignment this week is to build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.
-
-Because this application won’t be deployed, you’ll also need to create a walkthrough video that demonstrates its functionality and all of the following acceptance criteria being met. You’ll need to submit a link to the video and add it to the README of your project.
-
-User Story
-AS A business owner
-I WANT to be able to view and manage the departments, roles, and employees in my company
-SO THAT I can organize and plan my business
 
 Acceptance Criteria
 GIVEN a command-line application that accepts user input
@@ -29,7 +24,7 @@ THEN I am prompted to enter the name of the department and that department is ad
 WHEN I choose to add a role
 THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
 WHEN I choose to add an employee
-THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+THEN I am prompted to enter the employee’s first name, last name, role, and manager-, and that employee is added to the database
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role
 
@@ -46,6 +41,17 @@ Delete departments, roles, and employees. - works!
 
 View the total utilized budget of a department—in other words, the combined salaries of all employees in that department. - not working for my code currently - TRY TO FIX
 
+
+
+How to Submit the Challenge
+You are required to submit BOTH of the following for review:
+
+A walkthrough video demonstrating the functionality of the application. - RECORD VIDEO WHEN PROJECT IS COMPLETED
+Because this application won’t be deployed, you’ll also need to create a walkthrough video that demonstrates its functionality and all of the following acceptance criteria being met. You’ll need to submit a link to the video and add it to the README of your project.
+
+The URL of the GitHub repository, with a unique name and a README describing the project.
+- https://github.com/trujilml/employee-tracker
+
 ## Table of Contents
 - [Description](#Description)
 - [Installation](#Installation)
@@ -53,9 +59,14 @@ View the total utilized budget of a department—in other words, the combined sa
 - [Developed With](#Developed-with)
 
 ## Installation
+- This file can be cloned through GitHub into your own repository by selecting the above Code button.
+- The following npm packages listed in the `Developed With` tab are required to install prior to running `node server.js` and initiating the command line.
+- To view the database through MySQL, please type `mysql -u root -p`. Please note that with the dotenv package, you will need to add your MySQL password in the respective .env file and add it to the .gitignore file in order to prevent confidental information from leaking.
 
 ## Usage
-
+- Open the terminal through either the Integrated Terminal on VS Code or through the Terminal application on Mac OS following the cloned upload of the file with their respective installers present (please view `Developed With` below).
+- Type `node server.js` to get started.
+- This application allows the user to view, add, edit, and delete their employees, employees' roles, departments, and managers. Users can interact freely in this application. 
 
 ## Developed With
 - MySQL2 - Continuation package of MySQL. Relational database management system that ensures fast connection to host servers and web databases. The database involves hosting and retrieving the date of the employee, role and manager tables. - https://www.npmjs.com/package/mysql2
@@ -65,11 +76,3 @@ View the total utilized budget of a department—in other words, the combined sa
 - Chalk - npm package that styles and formats different colors and background for the command line terminal. Colorfully displays results from the inquirer prompts and titles of the inquired employee data tables. - https://www.npmjs.com/package/chalk
 - JavaScript - Back-end Development 
 - Node.js - Back-end Development 
-
-
-How to Submit the Challenge
-You are required to submit BOTH of the following for review:
-
-A walkthrough video demonstrating the functionality of the application.
-
-The URL of the GitHub repository, with a unique name and a README describing the project.
