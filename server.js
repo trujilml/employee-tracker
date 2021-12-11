@@ -22,7 +22,7 @@ const connection = mysql2.createConnection({
 
 connection.connect((err) => {
     if(err) {
-        console.log(chalk.whiteBright.bold.bgRedBright(err));
+        console.log(chalk.redBright.bold(err));
         return;
     }
     console.log(chalk.greenBright.bold(`Connected to the employee database. ID: ${connection.threadId}`));
@@ -33,7 +33,7 @@ const startDatabase = () => {
         {
             type: 'list',
             name: 'menuChoices',
-            message: chalk.whiteBright.bold.bgCyanBright('Select a database option below: '),
+            message: chalk.cyanBright.bold('Select a database option below: '),
             choices: [ 'View all Employees', 
                        'View all Employees by Department', 
                        'View all Employees by Manager',
@@ -45,7 +45,7 @@ const startDatabase = () => {
                        'Add a Role', //function is clearly working but all roles from its function are not displayed on terminal
                        'Delete an Employee',
                        'Delete a Department',
-                       'Delete a Role',
+                       'Delete a Role', //function works but does not display full list of roles as expected previous from viewl all roles and add a role
                        'Update an Employee`s Role',
                        'Update an Employee`s Manager',
                        'Exit']
@@ -99,7 +99,7 @@ const startDatabase = () => {
             }
 
             if(menuChoices === 'Delete a Role') {
-                deleteRole();
+                deleteRole(); //all roles from previous function still not displaying 
             }
 
             if(menuChoices === 'Update an Employee`s Role') {
@@ -117,7 +117,7 @@ const startDatabase = () => {
     };
 
 const viewEmployees = () => {
-           console.log(chalk.whiteBright.bold.bgGreenBright('Showing all employees...'));
+           console.log(chalk.greenBright.bold('Showing all employees...'));
            const employeeQuery = `SELECT employee.id, 
                        employee.first_name,
                        employee.last_name,
@@ -133,13 +133,13 @@ const viewEmployees = () => {
         connection.promise().query(employeeQuery).then(([ rows ]) => {
             let employee = rows;
             console.table(chalk.yellowBright.bold('All Employees'), employee);
-        }).catch(err => console.log(chalk.whiteBright.bold.bgRedBright(err)));
+        }).catch(err => console.log(chalk.redBright.bold(err)));
 
                    startDatabase();
 }
 
 const viewEmployeesByDepartment = () => {
-    console.log(chalk.whiteBright.bold.bgGreenBright('Showing employees by department...'));
+    console.log(chalk.greenBright.bold('Showing employees by department...'));
     const employeeDepartmentQuery = `SELECT employee.first_name,
                                             employee.last_name,
                                             department.name AS department
@@ -151,13 +151,13 @@ const viewEmployeesByDepartment = () => {
     connection.promise().query(employeeDepartmentQuery).then(([ rows ]) => {
         let employeeDepartment = rows;
         console.table(chalk.blueBright.bold('Employees by their respective department'), employeeDepartment);
-        }).catch(err => console.log(chalk.whiteBright.bold.bgRedBright(err)));
+        }).catch(err => console.log(chalk.redBright.bold(err)));
                     
         startDatabase();
 };
 
 const viewEmployeesByManager = () => {
-    console.log(chalk.whiteBright.bold.bgGreenBright('Showing employees by manager...'));
+    console.log(chalk.greenBright.bold('Showing employees by manager...'));
     const managerDepartmentQuery = `SELECT employee.first_name,
                                             employee.last_name,
                                             CONCAT (manager.first_name, " ", manager.last_name) AS manager
@@ -167,25 +167,25 @@ const viewEmployeesByManager = () => {
     connection.promise().query(managerDepartmentQuery).then(([ rows ]) => {
         let managerDepartment = rows;
         console.table(chalk.blueBright.bold('Employees by their respective manager'), managerDepartment);
-        }).catch(err => console.log(chalk.whiteBright.bold.bgRedBright(err)));
+        }).catch(err => console.log(chalk.redBright.bold(err)));
                     
         startDatabase();
 };
 
 const viewAllDepartments = () => {
-    console.log(chalk.whiteBright.bold.bgGreenBright('Showing all departments...'));
+    console.log(chalk.greenBright.bold('Showing all departments...'));
     const departmentQuery = `SELECT department.id AS id, department.name AS department FROM department`;
 
     connection.promise().query(departmentQuery).then(([ rows ]) => {
         let department = rows;
         console.table(chalk.magentaBright.bold('All Departments'), department);
-         }).catch(err => console.log(chalk.whiteBright.bold.bgRedBright(err)));
+         }).catch(err => console.log(chalk.redBright.bold(err)));
 
         startDatabase();
 }
 //not printing out department budgets like expected
 const viewDepartmentBudgets = () => {
-    console.log(chalk.whiteBright.bold.bgGreenBright('Showing budget by department...'));
+    console.log(chalk.greenBright.bold('Showing budget by department...'));
     const departmentBudgetQuery = `SELECT department_id AS id,
                                           department.name AS department,
                                           SUM(roles.salary) AS budget
@@ -195,14 +195,14 @@ const viewDepartmentBudgets = () => {
     connection.promise().query(departmentBudgetQuery).then(({ rows }) => {
         let departmentBudget = rows;
         console.table(chalk.cyanBright.bold('Department Budgets'), departmentBudget);
-        }).catch(err => console.log(chalk.whiteBright.bold.bgRedBright(err)));
+        }).catch(err => console.log(chalk.redBright.bold(err)));
 
         startDatabase();
 };
 //not printing all roles like expected
 const viewAllRoles = () => {
-    console.log(chalk.whiteBright.bold.bgGreenBright('Showing all roles...'));
-    const roleQuery = `SELECT title FROM roles`;
+    console.log(chalk.greenBright.bold('Showing all roles...'));
+    const roleQuery = `SELECT roles.id, roles.title FROM roles`;
     // `SELECT roles.id, roles.title, department.name AS department
     //                    FROM roles
     //                    INNER JOIN department ON roles.department_id = department.id`;
@@ -210,12 +210,13 @@ const viewAllRoles = () => {
     connection.promise().query(roleQuery).then(({ rows }) => {
         let roles = rows;
         console.table(chalk.cyanBright.bold('All Roles'), roles);
-        }).catch(err => console.log(chalk.whiteBright.bold.bgRedBright(err)));
+        }).catch(err => console.log(chalk.redBright.bold(err)));
 
         startDatabase();
 }
 //everything works expect the first and last name parameters aren't showing because it shows as null
 const addEmployee = () => {
+    console.log(chalk.greenBright.bold('Enter the following below: '));
     inquirer.prompt([
     {
             type: 'input',
@@ -290,9 +291,9 @@ const addEmployee = () => {
                 VALUES (?, ?, ?, ?)`;
 
                 connection.query(newHireSql, params, (err, result) => {
-                    if (err) throw err;
-                    console.log("Employee entered!");
-              
+                    if (err) throw (chalk.redBright.bold(err));
+                    console.log(chalk.magentaBright.bold("Employee entered!"));
+              //not the chalk -its null first name and last name presented in error
                     viewEmployees();
                 });
               });
@@ -302,8 +303,8 @@ const addEmployee = () => {
 });
 };
 
-//add chalk to this
 const addDepartment = () => {
+    console.log(chalk.greenBright.bold('Enter the following below: '));
     inquirer.prompt([
         {
         type: 'input',
@@ -324,8 +325,8 @@ const addDepartment = () => {
                             VALUES (?)`;
             
             connection.query(deptSql, answer.addDepartment, (err, result) => {
-                if (err) throw err;
-                console.log('Added ' + answer.addDepartment + 'to departments!');
+                if (err) throw (chalk.redBright.bold(err));
+                console.log(chalk.magentaBright.bold(('Added ' + answer.addDepartment + ' to departments!')));
 
                 viewAllDepartments();
             });
@@ -333,6 +334,7 @@ const addDepartment = () => {
     }
 //function is clearly working but all roles from its function is still not displayed
 const addRole = () => {
+    console.log(chalk.greenBright.bold('Enter the following below: '));
     inquirer.prompt([
         {
             type: 'input',
@@ -387,8 +389,8 @@ const addRole = () => {
                                 VALUES (?, ?, ?)`;
                 
                 connection.query(dptSql, params, (err, result) => {
-                    if (err) throw err;
-                    console.log("Added " + answer.role + " to roles!");
+                    if (err) throw (chalk.redBright.bold(err));
+                    console.log(chalk.magentaBright.bold(("Added " + answer.role + " to roles!")));
 
                 viewAllRoles();
                 });
@@ -396,8 +398,9 @@ const addRole = () => {
         });
     });
 };
-//add chalk to this and other working functions
+
 const deleteEmployee = () => {
+    console.log(chalk.greenBright.bold('Select the following below: '));
     //obtain employee from employee table
     const employeeSql = `SELECT * FROM employee`;
 
@@ -420,7 +423,7 @@ const deleteEmployee = () => {
             const sql = `DELETE FROM employee WHERE id = ?`;
 
             connection.query(sql, employee, (result) => {
-                console.log("Successfully deleted.");
+                console.log(chalk.redBright.bold("Successfully deleted."));
 
                 viewEmployees();
             });
@@ -429,6 +432,7 @@ const deleteEmployee = () => {
 };
 
 const deleteDepartment = () => {
+    console.log(chalk.greenBright.bold('Select the following below: '));
     const departmentSql = `SELECT * FROM department`;
 
     connection.query(departmentSql, (err, data) => {
@@ -449,20 +453,21 @@ const deleteDepartment = () => {
             const sql = `DELETE FROM department WHERE id = ?`;
 
             connection.query(sql, department, (err, result) => {
-                if (err) throw (err);
-                console.log("Successfully deleted.");
+                if (err) throw (chalk.redBright.bold(err));
+                console.log(chalk.redBright.bold("Successfully deleted."));
 
                 viewAllDepartments();
             });
         });
     });
 };
-
+//not showing list of all roles!
 const deleteRole = () => {
+    console.log(chalk.greenBright.bold('Select the following below: '));
     const roleSql = `SELECT * FROM roles`;
 
     connection.query(roleSql, (err, data) => {
-        if (err) throw (err);
+        if (err) throw (chalk.redBright.bold(err));
 
         const roles = data.map(({ title, id }) => ({ name: title, value: id}));
 
@@ -479,7 +484,7 @@ const deleteRole = () => {
             const sql = `DELETE FROM roles WHERE id = ?`;
 
             connection.query(sql, roles, (result) => {
-                console.log("Successfully deleted.");
+                console.log(chalk.redBright.bold("Successfully deleted."));
 
                 viewAllRoles();
             });
@@ -535,7 +540,7 @@ const updateEmployeeRole = () => {
                     const updateSql = `UPDATE employee SET role_id = ? WHERE id =?`;
 
                     connection.query(updateSql, params, (err, result) => {
-                        if (err) throw (err);
+                        if (err) throw (chalk.redBright.bold(err));
                         console.log("Employee has been updated.");
 
                         viewEmployees();
@@ -594,7 +599,7 @@ const updateEmployeeManager = () => {
                     const updateManagerSql = `UPDATE employee SET manager_id = ? WHERE id = ?`;
 
                     connection.query(updateManagerSql, params, (err, result) => {
-                        if (err) throw (err);
+                        if (err) throw (chalk.redBright.bold(err));
                         console.log("Employee has been updated.");
 
                         viewEmployees();
