@@ -38,14 +38,14 @@ const startDatabase = () => {
                        'View all Employees by Department', 
                        'View all Employees by Manager',
                        'View all Departments',
-                       'View Department budgets', //not printing out department budgets like expected
-                       'View all Roles', //not printing all roles like expected - not visible 
-                       'Add an Employee', //first and last name presents as null for some reason, even as inquirer is clearly working 
+                       'View Department budgets', 
+                       'View all Roles', 
+                       'Add an Employee', 
                        'Add a Department',
-                       'Add a Role', //function is clearly working but all roles from its function are not displayed on terminal
+                       'Add a Role', 
                        'Delete an Employee',
                        'Delete a Department',
-                       'Delete a Role', //function works but does not display full list of roles as expected previous from viewl all roles and add a role
+                       'Delete a Role', 
                        'Update an Employee`s Role',
                        'Update an Employee`s Manager',
                        'Exit']
@@ -71,15 +71,15 @@ const startDatabase = () => {
             }
 
             if(menuChoices === 'View Department budgets') {
-                viewDepartmentBudgets(); //not printing out department budgets like expected
+                viewDepartmentBudgets();
             }
 
             if(menuChoices === 'View all Roles') {
-                viewAllRoles(); //not printing all roles like expected
+                viewAllRoles(); 
             }
  
             if(menuChoices === 'Add an Employee') {
-                addEmployee(); //inquirer prompts appear but 'you must provide a choices parameter' appears and am unable to finish the prompt
+                addEmployee(); 
             }
 
             if(menuChoices === 'Add a Department') {
@@ -87,7 +87,7 @@ const startDatabase = () => {
             }
 
             if(menuChoices === 'Add a Role') {
-                addRole(); //function is clearly working but all roles from its function is still not displayed
+                addRole(); 
             }
 
             if(menuChoices === 'Delete an Employee') {
@@ -99,7 +99,7 @@ const startDatabase = () => {
             }
 
             if(menuChoices === 'Delete a Role') {
-                deleteRole(); //all roles from previous function still not displaying 
+                deleteRole(); 
             }
 
             if(menuChoices === 'Update an Employee`s Role') {
@@ -183,7 +183,7 @@ const viewAllDepartments = () => {
 
         startDatabase();
 }
-//not printing out department budgets like expected
+
 const viewDepartmentBudgets = () => {
     console.log(chalk.greenBright.bold('Showing budget by department...'));
     const departmentBudgetQuery = `SELECT department_id AS id,
@@ -192,29 +192,28 @@ const viewDepartmentBudgets = () => {
                                    FROM roles
                                    JOIN department ON roles.department_id = department.id GROUP BY department.id`;
     
-    connection.promise().query(departmentBudgetQuery).then(({ rows }) => {
+    connection.promise().query(departmentBudgetQuery).then(([ rows ]) => {
         let departmentBudget = rows;
         console.table(chalk.cyanBright.bold('Department Budgets'), departmentBudget);
         }).catch(err => console.log(chalk.redBright.bold(err)));
 
         startDatabase();
 };
-//not printing all roles like expected
+
 const viewAllRoles = () => {
     console.log(chalk.greenBright.bold('Showing all roles...'));
-    const roleQuery = `SELECT roles.id, roles.title FROM roles`;
-    // `SELECT roles.id, roles.title, department.name AS department
-    //                    FROM roles
-    //                    INNER JOIN department ON roles.department_id = department.id`;
+    const roleQuery = `SELECT roles.title, roles.salary, department.name AS department
+                        FROM roles
+                        INNER JOIN department ON roles.department_id = department.id`;
 
-    connection.promise().query(roleQuery).then(({ rows }) => {
+    connection.promise().query(roleQuery).then(([ rows ]) => {
         let roles = rows;
         console.table(chalk.cyanBright.bold('All Roles'), roles);
         }).catch(err => console.log(chalk.redBright.bold(err)));
 
         startDatabase();
-}
-//everything works expect the first and last name parameters aren't showing because it shows as null
+};
+
 const addEmployee = () => {
     console.log(chalk.greenBright.bold('Enter the following below: '));
     inquirer.prompt([
@@ -246,7 +245,8 @@ const addEmployee = () => {
     }
     ])
     .then(answer => {
-        const params = [answer.addFirstName, answer.addLastName];
+        const params = [answer.firstName, answer.lastName];
+        console.log(answer);
 
         //obtain roles from the roles table in seeds sql file
         const roleSql = `SELECT roles.id, roles.title FROM roles`;
@@ -286,14 +286,14 @@ const addEmployee = () => {
             .then(managerChoice => {
                 const manager = managerChoice.manager;
                 params.push(manager);
-//shows first name cannot be null - not sure how to fix this
+
                 const newHireSql = `INSERT INTO employee(first_name, last_name, role_id, manager_id)
                 VALUES (?, ?, ?, ?)`;
 
                 connection.query(newHireSql, params, (err, result) => {
                     if (err) throw (chalk.redBright.bold(err));
                     console.log(chalk.magentaBright.bold("Employee entered!"));
-              //not the chalk -its null first name and last name presented in error
+
                     viewEmployees();
                 });
               });
@@ -332,7 +332,7 @@ const addDepartment = () => {
             });
         })
     }
-//function is clearly working but all roles from its function is still not displayed
+
 const addRole = () => {
     console.log(chalk.greenBright.bold('Enter the following below: '));
     inquirer.prompt([
@@ -371,8 +371,8 @@ const addRole = () => {
         connection.query(roleSql, (err, data) => {
             if (err) throw (err);
 
-            const department = data.map(({ name, id}) => ({ name: name, value: id }));
-
+            const department = data.map(({name, id}) => ({ name: name, value: id }));
+            console.log(department);
             inquirer.prompt([
                 {
                     type: 'list',
@@ -382,8 +382,10 @@ const addRole = () => {
                 }
             ])
             .then(departmentChoice => {
-                const dept = departmentChoice.dept;
+                const dept = departmentChoice.department;
                 params.push(dept);
+
+                console.log(params);
 
                 const dptSql = `INSERT INTO roles (title, salary, department_id)
                                 VALUES (?, ?, ?)`;
@@ -461,7 +463,7 @@ const deleteDepartment = () => {
         });
     });
 };
-//not showing list of all roles!
+
 const deleteRole = () => {
     console.log(chalk.greenBright.bold('Select the following below: '));
     const roleSql = `SELECT * FROM roles`;
@@ -480,10 +482,11 @@ const deleteRole = () => {
             }
         ])
         .then(roleChoice => {
-            const roles = roleChoice.roles;
+            const role = roleChoice.role;
+            console.log(role);
             const sql = `DELETE FROM roles WHERE id = ?`;
 
-            connection.query(sql, roles, (result) => {
+            connection.query(sql, role, (result) => {
                 console.log(chalk.redBright.bold("Successfully deleted."));
 
                 viewAllRoles();
