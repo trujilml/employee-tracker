@@ -28,18 +28,6 @@ When the application is started, the user is presented with the following option
 
 From there, the user can select one of these options that display the respective information of their title along with adding their input when updating or adding specific data.
 
-
-How to Submit the Challenge
-You are required to submit BOTH of the following for review:
-
-A walkthrough video demonstrating the functionality of the application. - RECORD VIDEO WHEN PROJECT IS COMPLETED
-Because this application won’t be deployed, you’ll also need to create a walkthrough video that demonstrates its functionality and all of the following acceptance criteria being met. You’ll need to submit a link to the video and add it to the README of your project.
-
-The URL of the GitHub repository, with a unique name and a README describing the project.
-- https://github.com/trujilml/employee-tracker
-
-
-
 ## Table of Contents
 - [Description](#Description)
 - [Installation](#Installation)
