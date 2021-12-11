@@ -1,6 +1,6 @@
 # Employee Tracker
 
-<!-- insert in screenshot of completed console or gif of video -->
+![Employee Tracker Sample Screenshot 1](./demo/employee-trackerscreenshot1.png)
 Employee Tracker is a command-line application used to manage a company's employee database.
 
 ## Description
