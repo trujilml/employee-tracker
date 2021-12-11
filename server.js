@@ -39,10 +39,10 @@ const startDatabase = () => {
                        'View all Employees by Manager',
                        'View all Departments',
                        'View Department budgets', //not printing out department budgets like expected
-                       'View all Roles', //not printing all roles like expected
-                       'Add an Employee', //inquirer prompts appear but 'you must provide a choices parameter' appears and am unable to finish the prompt
+                       'View all Roles', //not printing all roles like expected - not visible 
+                       'Add an Employee', //first and last name presents as null for some reason, even as inquirer is clearly working 
                        'Add a Department',
-                       'Add a Role', //function is clearly working but all roles from its function is still not displayed
+                       'Add a Role', //function is clearly working but all roles from its function are not displayed on terminal
                        'Delete an Employee',
                        'Delete a Department',
                        'Delete a Role',
@@ -198,7 +198,7 @@ const viewDepartmentBudgets = () => {
         }).catch(err => console.log(chalk.whiteBright.bold.bgRedBright(err)));
 
         startDatabase();
-}
+};
 //not printing all roles like expected
 const viewAllRoles = () => {
     console.log(chalk.whiteBright.bold.bgGreenBright('Showing all roles...'));
@@ -214,7 +214,7 @@ const viewAllRoles = () => {
 
         startDatabase();
 }
-//inquirer prompts appear but 'you must provide a choices parameter' appears and am unable to finish the prompt
+//everything works expect the first and last name parameters aren't showing because it shows as null
 const addEmployee = () => {
     inquirer.prompt([
     {
@@ -250,10 +250,11 @@ const addEmployee = () => {
         //obtain roles from the roles table in seeds sql file
         const roleSql = `SELECT roles.id, roles.title FROM roles`;
 
-        const roles = data.map(({ department_id, title }) => ({name: title, value: department_id}));
+        connection.query(roleSql, (err, data) => {
+            if (err) throw (err);
 
-        connection.query(roleSql).then(({ roles }));
-//reformat const and connection query functions similar to addDepartment function below
+            const roles = data.map(({ id, title }) => ({name: title, value: id}));
+
         inquirer.prompt([
             {
                 type: 'list',
@@ -268,9 +269,10 @@ const addEmployee = () => {
 
             const managerSql = `SELECT * FROM employee`;
 
-            const managers = console.table(({ manager_id, first_name, last_name }) => ({ name: first_name + " "+ last_name, value: manager_id }));
+            connection.query(managerSql, (err, data) => {
+                if (err) throw (err);
 
-            connection.promise.query(managerSql).then(({ managers }));
+                const managers = data.map(({ id, first_name, last_name }) => ({ name: first_name + " " + last_name, value: id }));
 
             inquirer.prompt([
                 {
@@ -283,22 +285,23 @@ const addEmployee = () => {
             .then(managerChoice => {
                 const manager = managerChoice.manager;
                 params.push(manager);
-
-                const newHireSql = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
+//shows first name cannot be null - not sure how to fix this
+                const newHireSql = `INSERT INTO employee(first_name, last_name, role_id, manager_id)
                 VALUES (?, ?, ?, ?)`;
 
-                connection.query(newHireSql, params); {
+                connection.query(newHireSql, params, (err, result) => {
+                    if (err) throw err;
                     console.log("Employee entered!");
-                };
+              
+                    viewEmployees();
+                });
+              });
+            });
+        });
+    });
+});
+};
 
-                //reformat const and connection query functions similar to addDepartment function below
-            })
-        })
-
-    // startDatabase();
-    viewEmployees();
-    })
-}
 //add chalk to this
 const addDepartment = () => {
     inquirer.prompt([
