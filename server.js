@@ -36,6 +36,7 @@ const startDatabase = () => {
             message: chalk.whiteBright.bold.bgCyanBright('Select a database option below: '),
             choices: [ 'View all Employees', 
                        'View all Employees by Department', 
+                       'View all Employees by Manager',
                        'View all Departments',
                        'View Department budgets', //not printing out department budgets like expected
                        'View all Roles', //not printing all roles like expected
@@ -59,6 +60,10 @@ const startDatabase = () => {
 
             if (menuChoices === 'View all Employees by Department') {
                 viewEmployeesByDepartment();
+            }
+
+            if(menuChoices === 'View all Employees by Manager') {
+                viewEmployeesByManager();
             }
 
             if(menuChoices === 'View all Departments') {
@@ -97,8 +102,12 @@ const startDatabase = () => {
                 deleteRole();
             }
 
-            if(menuChoices === 'Update an Employee`s Role'){
+            if(menuChoices === 'Update an Employee`s Role') {
                 updateEmployeeRole();
+            }
+
+            if(menuChoices === 'Update an Employee`s Manager') {
+                updateEmployeeManager();
             }
 
             if (menuChoices === 'Exit') {
@@ -145,7 +154,23 @@ const viewEmployeesByDepartment = () => {
         }).catch(err => console.log(chalk.whiteBright.bold.bgRedBright(err)));
                     
         startDatabase();
-}
+};
+
+const viewEmployeesByManager = () => {
+    console.log(chalk.whiteBright.bold.bgGreenBright('Showing employees by manager...'));
+    const managerDepartmentQuery = `SELECT employee.first_name,
+                                            employee.last_name,
+                                            CONCAT (manager.first_name, " ", manager.last_name) AS manager
+                                    FROM employee
+                                    LEFT JOIN employee manager ON employee.manager_id = manager.id`;
+
+    connection.promise().query(managerDepartmentQuery).then(([ rows ]) => {
+        let managerDepartment = rows;
+        console.table(chalk.blueBright.bold('Employees by their respective manager'), managerDepartment);
+        }).catch(err => console.log(chalk.whiteBright.bold.bgRedBright(err)));
+                    
+        startDatabase();
+};
 
 const viewAllDepartments = () => {
     console.log(chalk.whiteBright.bold.bgGreenBright('Showing all departments...'));
@@ -177,9 +202,10 @@ const viewDepartmentBudgets = () => {
 //not printing all roles like expected
 const viewAllRoles = () => {
     console.log(chalk.whiteBright.bold.bgGreenBright('Showing all roles...'));
-    const roleQuery = `SELECT roles.id, roles.title, department.name AS department
-                       FROM roles
-                       INNER JOIN department ON roles.department_id = department.id`;
+    const roleQuery = `SELECT title FROM roles`;
+    // `SELECT roles.id, roles.title, department.name AS department
+    //                    FROM roles
+    //                    INNER JOIN department ON roles.department_id = department.id`;
 
     connection.promise().query(roleQuery).then(({ rows }) => {
         let roles = rows;
@@ -224,9 +250,9 @@ const addEmployee = () => {
         //obtain roles from the roles table in seeds sql file
         const roleSql = `SELECT roles.id, roles.title FROM roles`;
 
-        const roles = console.table(({ department_id, title }) => ({name: title, value: department_id}));
+        const roles = data.map(({ department_id, title }) => ({name: title, value: department_id}));
 
-        connection.promise().query(roleSql).then(({ roles }));
+        connection.query(roleSql).then(({ roles }));
 //reformat const and connection query functions similar to addDepartment function below
         inquirer.prompt([
             {
@@ -457,7 +483,7 @@ const deleteRole = () => {
         });
     });
 };
-
+//chalk update
 const updateEmployeeRole = () => {
     //obtain employee from the employee table
     const employeeSql = `SELECT * FROM employee`;
@@ -465,8 +491,115 @@ const updateEmployeeRole = () => {
     connection.query(employeeSql, (err, data) => {
         if (err) throw (err);
 
-        const employees 
-    })
+        const employees = data.map(({ id, first_name, last_name}) => ({ name: first_name + " "+ last_name, value: id }));
 
-}
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'name',
+                message: "Which employee would you like to update?",
+                choices: employees
+            }
+        ])
+        .then(employeeChoice => {
+            const employee = employeeChoice.name;
+            const params = [];
+            params.push(employee);
+            
+            const rolesSql = `SELECT * FROM roles`;
+
+            connection.query(rolesSql, (err, data) => {
+                if (err) throw (err);
+
+                const roles = data.map(({ id, title }) => ({ name: title, value: id}));
+
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'role',
+                        message: "What's the employee's new role?",
+                        choices: roles
+                    }
+                ])
+                .then(roleChoice => {
+                    const role = roleChoice.role;
+                    params.push(role);
+
+                    let employee = params[0]
+                    params[0] = role
+                    params[1] = employee
+                    
+                    const updateSql = `UPDATE employee SET role_id = ? WHERE id =?`;
+
+                    connection.query(updateSql, params, (err, result) => {
+                        if (err) throw (err);
+                        console.log("Employee has been updated.");
+
+                        viewEmployees();
+                    });
+                });
+            });
+        });
+    });
+};
+//bring in chalk
+const updateEmployeeManager = () => {
+    //obtain employee from the employee table
+    const employeeSql = `SELECT * FROM employee`;
+
+    connection.query(employeeSql, (err, data) => {
+        if (err) throw (err);
+
+        const employees = data.map(({ id, first_name, last_name}) => ({ name: first_name + " "+ last_name, value: id }));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'name',
+                message: "Which employee would you like to update?",
+                choices: employees
+            }
+        ])
+        .then(employeeChoice => {
+            const employee = employeeChoice.name;
+            const params = [];
+            params.push(employee);
+
+            const managerSql = `SELECT * FROM employee`;
+
+            connection.query(managerSql, (err, data) => {
+                if (err) throw (err);
+
+                const managers = data.map(({ id, first_name, last_name}) => ({ name: first_name + " "+ last_name, value: id }));
+
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'manager',
+                        message: "Who is the employee's manager?",
+                        choices: managers
+                    }
+                ])
+                .then(managerChoice => {
+                    const manager = managerChoice.manager;
+                    params.push(manager);
+
+                    let employee = params[0]
+                    params[0] = manager
+                    params[1] = employee
+
+                    const updateManagerSql = `UPDATE employee SET manager_id = ? WHERE id = ?`;
+
+                    connection.query(updateManagerSql, params, (err, result) => {
+                        if (err) throw (err);
+                        console.log("Employee has been updated.");
+
+                        viewEmployees();
+                    });
+                });
+            });
+        });
+    });
+};
+
 startDatabase();
