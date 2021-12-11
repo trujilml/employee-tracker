@@ -1,4 +1,9 @@
 # Employee Tracker
+
+<!-- insert in screenshot of completed console or gif of video -->
+
+
+## Description
 Your Task
 Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called content management systems (CMS). Your assignment this week is to build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.
 
@@ -28,13 +33,6 @@ THEN I am prompted to enter the employee’s first name, last name, role, and ma
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role
 
-Getting Started
-You’ll need to use the MySQL2 package (Links to an external site.) to connect to your MySQL database and perform queries, the Inquirer package (Links to an external site.) to interact with the user via the command line, and the console.table package (Links to an external site.) to print MySQL rows to the console.
-
-Important: You will be committing a file that contains your database credentials. Make sure that your MySQL password is not used for any other personal accounts, because it will be visible on GitHub. dotenv is used.
-
-You might also want to make your queries asynchronous. MySQL2 exposes a .promise() function on Connections to upgrade an existing non-Promise connection to use Promises. 
-
 Bonus
 Try to add some additional functionality to your application, such as the ability to do the following:
 
@@ -48,6 +46,25 @@ Delete departments, roles, and employees. - works!
 
 View the total utilized budget of a department—in other words, the combined salaries of all employees in that department. - not working for my code currently - TRY TO FIX
 
+## Table of Contents
+- [Description](#Description)
+- [Installation](#Installation)
+- [Usage](#Usage)
+- [Developed With](#Developed-with)
+
+## Installation
+
+## Usage
+
+
+## Developed With
+- MySQL2 - Continuation package of MySQL. Relational database management system that ensures fast connection to host servers and web databases. The database involves hosting and retrieving the date of the employee, role and manager tables. - https://www.npmjs.com/package/mysql2
+- dotenv - An npm package that protects login credentials from other users through the .env file and MySQL. - https://www.npmjs.com/package/dotenv
+- console.table - npm package that adds the tables to display in the command line, works with use of MySQL2, Inquirer, Node.js and JS. - https://www.npmjs.com/package/console.table 
+- Inquirer - npm package that houses a collection of interactive command line interfaces, where the user is able to interact with the employee tables and add several assets for this employee tracker. - https://www.npmjs.com/package/inquirer
+- Chalk - npm package that styles and formats different colors and background for the command line terminal. Colorfully displays results from the inquirer prompts and titles of the inquired employee data tables. - https://www.npmjs.com/package/chalk
+- JavaScript - Back-end Development 
+- Node.js - Back-end Development 
 
 
 How to Submit the Challenge
@@ -56,19 +73,3 @@ You are required to submit BOTH of the following for review:
 A walkthrough video demonstrating the functionality of the application.
 
 The URL of the GitHub repository, with a unique name and a README describing the project.
-
-Installation
-
-Usage
-
-Comments
-
-Developed With
--JavaScript
--Node.js
--Inquirer
--MySQL2
--Jest
--dotenv
--Chalk
--console.table
